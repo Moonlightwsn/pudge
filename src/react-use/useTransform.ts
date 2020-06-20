@@ -201,7 +201,18 @@ const reducer = (prevState: State, action: Action): State => {
           } else {
             rotateDirection = 1;
           }
-          angle = Math.acos(cosa) * rotateDirection;
+          angle = Math.acos(cosa);
+          if (Number.isNaN(Math.acos(cosa))) {
+            angle = 0;
+            const tmpVec = whichQuadrant({ x: centerX, y: centerY }, { x, y });
+            if (tmpVec.x >= 0 && tmpVec.y >= 0) {
+              angle = 0;
+            } else if (tmpVec.x < 0 && tmpVec.y < 0) {
+              angle = Math.PI;
+            }
+          }
+          angle *= rotateDirection;
+
           scale = b / c;
           // }
         } else if (prevState.managementData.dragging) {
